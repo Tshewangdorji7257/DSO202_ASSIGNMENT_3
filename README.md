@@ -1,12 +1,5 @@
 # DSO202 Assignment 3: Package and Configuration Management with Kustomize and Helm
 
-**Name:** ____________________
-**Student ID:** ____________________
-**Course:** DSO202
-**Date:** 5 November 2026
-
----
-
 ## 1. Introduction
 
 Modern applications are rarely deployed just once. The same application usually runs in several environments, such as development, testing and production, and each one needs slightly different settings: the number of replicas, resource limits, log levels, domain names and credentials. Managing these differences is one of the everyday challenges of running software on Kubernetes.
