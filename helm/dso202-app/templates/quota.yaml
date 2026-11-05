@@ -1,0 +1,29 @@
+{{- if .Values.quota.enabled }}
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dso202-quota
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dso202.labels" . | nindent 4 }}
+spec:
+  hard:
+    {{- range $k, $v := .Values.quota.hard }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: dso202-limitrange
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dso202.labels" . | nindent 4 }}
+spec:
+  limits:
+    - type: Container
+      default: {cpu: 500m, memory: 256Mi}
+      defaultRequest: {cpu: 250m, memory: 128Mi}
+      max: {cpu: "1", memory: 512Mi}
+      min: {cpu: 50m, memory: 64Mi}
+{{- end }}

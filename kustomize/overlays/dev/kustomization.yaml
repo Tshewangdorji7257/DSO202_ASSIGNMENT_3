@@ -1,0 +1,44 @@
+# OVERLAY dev = only what differs from the base.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - namespace.yaml
+
+namespace: dso202-assignment-02-dev
+
+labels:
+  - pairs:
+      app.kubernetes.io/environment: dev
+      debug: "true"
+    includeSelectors: false   # never touch selectors (immutable / traffic routing)
+    includeTemplates: true
+
+replicas:
+  - name: backend-deployment
+    count: 1
+  - name: frontend-deployment
+    count: 1
+
+images:
+  - name: rynorbu11/dso202-backend
+    newTag: "1.0"
+  - name: rynorbu11/dso202-frontend
+    newTag: "1.0"
+
+configMapGenerator:
+  - name: app-config
+    behavior: merge
+    literals:
+      - LOG_LEVEL=debug
+
+# Dev needs its own host: the old Assignment 1 Ingress already owns "any host" + /api
+patches:
+  - target:
+      kind: Ingress
+      name: frontend-ingress
+    patch: |-
+      - op: add
+        path: /spec/rules/0/host
+        value: dev.dso202.example.local

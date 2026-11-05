@@ -1,0 +1,6 @@
+- op: add
+  path: /spec/rules/0/host
+  value: dso202.example.local
+- op: replace
+  path: /metadata/annotations/nginx.ingress.kubernetes.io~1proxy-body-size
+  value: 8m

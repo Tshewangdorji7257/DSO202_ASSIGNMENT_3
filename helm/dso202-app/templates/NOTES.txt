@@ -1,0 +1,7 @@
+Release {{ .Release.Name }} installed in namespace {{ .Release.Namespace }} ({{ .Values.environment }}).
+
+Reach the app through the NGINX Ingress:
+  kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 8088:80
+  curl {{ if .Values.ingress.host }}-H "Host: {{ .Values.ingress.host }}" {{ end }}http://localhost:8088/api/status
+
+Run the chart test:   helm test {{ .Release.Name }} -n {{ .Release.Namespace }}

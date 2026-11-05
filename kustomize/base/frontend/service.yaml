@@ -1,0 +1,15 @@
+# ClusterIP, not NodePort: the Ingress is now the entry point. This also avoids
+# the NodePort 30080 clash between environments.
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  labels:
+    tier: frontend
+spec:
+  type: ClusterIP
+  selector:
+    tier: frontend
+  ports:
+    - port: 8080
+      targetPort: 8080

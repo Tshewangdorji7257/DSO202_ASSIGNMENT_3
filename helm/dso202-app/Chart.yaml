@@ -1,0 +1,7 @@
+apiVersion: v2
+name: dso202-app
+description: DSO202 Assignment 2 - frontend, backend, PostgreSQL StatefulSet and NGINX Ingress
+type: application
+version: 0.1.0        # version of the chart (package)
+appVersion: "1.0"     # version of the software inside it
+kubeVersion: ">=1.27.0-0"

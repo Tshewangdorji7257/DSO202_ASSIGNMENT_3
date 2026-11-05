@@ -1,0 +1,39 @@
+# NOTE: the backend/frontend manifests were not in the submitted zip.
+# Names, ports and probes were reconstructed from the evidence screenshots
+# (backend-deployment, backend-svc:8080, GET /api/status). Image names are
+# ASSUMPTIONS - set them to the images you actually used in Assignment 1.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          image: rynorbu11/dso202-backend:1.0
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secret
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 250m, memory: 256Mi}

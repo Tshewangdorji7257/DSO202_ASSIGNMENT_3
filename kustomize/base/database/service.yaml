@@ -1,0 +1,14 @@
+# Headless Service: gives the StatefulSet pod the stable DNS name db-0.db-svc
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-svc
+  labels:
+    tier: database
+spec:
+  clusterIP: None
+  selector:
+    tier: database
+  ports:
+    - port: 5432
+      targetPort: 5432

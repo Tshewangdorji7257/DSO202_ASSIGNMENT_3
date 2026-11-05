@@ -1,0 +1,48 @@
+# OVERLAY prod = only what differs from the base.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - namespace.yaml
+
+namespace: dso202-assignment-02-prod
+
+labels:
+  - pairs:
+      app.kubernetes.io/environment: prod
+    includeSelectors: false
+    includeTemplates: true
+
+# Stateless tiers scale out. The database stays at 1 replica on purpose.
+replicas:
+  - name: backend-deployment
+    count: 2
+  - name: frontend-deployment
+    count: 2
+
+# Prod pins exact release tags (never a moving tag).
+images:
+  - name: rynorbu11/dso202-backend
+    newTag: "1.0"
+  - name: rynorbu11/dso202-frontend
+    newTag: "1.0"
+
+configMapGenerator:
+  - name: app-config
+    behavior: merge
+    literals:
+      - LOG_LEVEL=warn
+      - BACKEND_URL=http://dso202.example.local:8088
+
+patches:
+  # Strategic merge: "show me the Kubernetes fragment I want changed"
+  - path: patch-resources.yaml
+  - path: patch-quota.yaml
+  # JSON 6902: "operate at this exact path" (note ~1 escaping for '/')
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: frontend-ingress
+    path: patch-ingress.json6902.yaml

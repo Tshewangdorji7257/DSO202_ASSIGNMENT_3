@@ -1,0 +1,7 @@
+environment: dev
+config:
+  LOG_LEVEL: debug
+secret:
+  dbPassword: dev-only-password   # dummy value for the lab
+ingress:
+  host: dev.dso202.example.local

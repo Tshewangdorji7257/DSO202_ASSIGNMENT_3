@@ -1,0 +1,29 @@
+# BASE = what is shared by every environment.
+# No namespace here: each overlay decides where the app lives.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - database/service.yaml
+  - database/statefulset.yaml
+  - backend/deployment.yaml
+  - backend/service.yaml
+  - frontend/deployment.yaml
+  - frontend/service.yaml
+  - frontend/ingress.yaml
+  - quota.yaml
+
+# Replaces the hand-written configmap.yaml of Assignment 2.
+# Rendered name is app-config-<hash>; Kustomize rewrites every reference
+# (configMapKeyRef) automatically, so never hard-code the hash.
+configMapGenerator:
+  - name: app-config
+    envs:
+      - app.env
+
+# DUMMY classroom credentials only. base64 is not encryption:
+# real credentials must come from a secret-management tool, not from Git.
+secretGenerator:
+  - name: app-secret
+    envs:
+      - secret.env

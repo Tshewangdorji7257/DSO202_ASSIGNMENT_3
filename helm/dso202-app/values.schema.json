@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["environment", "config", "secret", "database", "backend", "frontend", "ingress"],
+  "properties": {
+    "environment": {"type": "string", "enum": ["dev", "staging", "prod"]},
+    "secret": {
+      "type": "object",
+      "required": ["dbUser"],
+      "properties": {"dbUser": {"type": "string", "minLength": 1}, "dbPassword": {"type": "string"}}
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "replicas": {"type": "integer", "minimum": 1, "maximum": 1},
+        "retainPvc": {"type": "boolean"}
+      }
+    },
+    "backend": {"type": "object", "properties": {"replicas": {"type": "integer", "minimum": 1}, "port": {"type": "integer"}}},
+    "frontend": {"type": "object", "properties": {"replicas": {"type": "integer", "minimum": 1}, "port": {"type": "integer"}}},
+    "ingress": {"type": "object", "properties": {"enabled": {"type": "boolean"}, "host": {"type": "string"}}}
+  }
+}

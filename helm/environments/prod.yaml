@@ -1,0 +1,24 @@
+environment: prod
+config:
+  LOG_LEVEL: warn
+  BACKEND_URL: http://dso202.example.local:8088
+backend:
+  replicas: 2
+  resources:
+    requests: {cpu: 200m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+frontend:
+  replicas: 2
+ingress:
+  host: dso202.example.local
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+quota:
+  hard:
+    pods: "15"
+    requests.cpu: "2"
+    requests.memory: 1536Mi
+    limits.cpu: "4"
+    limits.memory: 3Gi
+# secret.dbPassword is deliberately absent: install with
+#   --set secret.dbPassword=...   (or use an external secret manager)
